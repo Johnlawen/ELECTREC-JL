@@ -20,19 +20,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const placeholderImg = 'https://images.unsplash.com/photo-1513506003901-1e6a229e9d15?q=80&w=400&auto=format&fit=crop';
 
     card.innerHTML = `
-      <button class="wishlist-btn"><i class="ph ph-heart"></i></button>
-      <a href="product.html?id=${p.id}" style="text-decoration: none; color: inherit;">
+      <div class="card-clickable-area" style="cursor:pointer;" onclick="window.location.href='product.html?id=${p.id}'">
         <div class="product-img">
           <img src="${p.image || placeholderImg}" alt="${p.name}"
             onerror="this.src='${placeholderImg}'">
           ${p.stock === 0 ? '<div class="out-of-stock-badge">אזל המלאי</div>' : ''}
         </div>
         <h3 class="product-title">${p.name}</h3>
-      </a>
-      <div class="product-price-wrap">
-        <div class="product-price">₪${Number(p.price).toLocaleString()}</div>
-        ${hasDiscount ? `<div class="product-original-price">₪${Number(p.originalPrice).toLocaleString()}</div>` : ''}
+        <div class="product-price-wrap">
+          <div class="product-price">₪${Number(p.price).toLocaleString()}</div>
+          ${hasDiscount ? `<div class="product-original-price">₪${Number(p.originalPrice).toLocaleString()}</div>` : ''}
+        </div>
       </div>
+      <button class="wishlist-btn"><i class="ph ph-heart"></i></button>
       <div class="product-actions">
         <button class="btn btn-add-cart" ${p.stock === 0 ? 'disabled' : ''}>
           ${p.stock === 0 ? 'אזל המלאי' : 'הוסף לסל'}
@@ -58,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
     card.querySelectorAll('.btn-add-cart, .btn-cart-icon').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
+        e.stopPropagation();
         if (!btn.disabled) addToCart(btn);
       });
     });
@@ -90,6 +91,71 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Failed to load products:', err);
         grid.innerHTML = '<p style="text-align:center;grid-column:1/-1;color:#666">שגיאה בטעינת המוצרים</p>';
       });
+  }
+
+  // ─── LOAD & RENDER SALES PAGE (sales.html) ─────────────────────────────────
+  const salesGrid = document.querySelector('.sales-grid');
+  if (salesGrid && window.location.pathname.includes('sales.html')) {
+    fetch('https://electrec-jl.vercel.app/api/store?key=jl_products')
+      .then(res => res.json())
+      .then(data => {
+        const products = data.data;
+        salesGrid.innerHTML = ''; // Clear hardcoded
+        
+        if (!products || products.length === 0) {
+          salesGrid.innerHTML = '<p style="text-align:center;grid-column:1/-1;color:#666">אין מבצעים כרגע</p>';
+          return;
+        }
+
+        const salesProducts = products.filter(p => p.originalPrice > p.price);
+        
+        if (salesProducts.length === 0) {
+          salesGrid.innerHTML = '<p style="text-align:center;grid-column:1/-1;color:#666">אין מבצעים כרגע</p>';
+          return;
+        }
+
+        salesProducts.forEach(p => {
+          // Wrap them in our standard product card or the sale card styling
+          // For consistency, we can use renderProductCard but maybe tweak styling if needed,
+          // but renderProductCard works perfectly.
+          const card = renderProductCard(p);
+          salesGrid.appendChild(card);
+        });
+      })
+      .catch(err => {
+        console.error('Failed to load sales:', err);
+        salesGrid.innerHTML = '<p style="text-align:center;grid-column:1/-1;color:#666">שגיאה בטעינת מבצעים</p>';
+      });
+  }
+
+  // ─── LOAD & RENDER CATEGORIES PAGE (categories.html) ──────────────────────
+  const catGrid = document.querySelector('.category-cards-grid');
+  if (catGrid && window.location.pathname.includes('categories.html')) {
+    fetch('https://electrec-jl.vercel.app/api/store?key=jl_categories')
+      .then(res => res.json())
+      .then(data => {
+        const cats = data.data;
+        if (!cats || cats.length === 0) return; // leave hardcoded if empty
+        
+        catGrid.innerHTML = cats.map(c => `
+          <a href="#" class="cat-card">
+            <div class="cat-card-img">
+              <img src="${c.image || 'https://via.placeholder.com/600x400?text=No+Image'}" alt="${c.name}">
+            </div>
+            <div class="cat-card-content">
+              <div class="cat-card-header">
+                <div class="cat-title-wrap">
+                  <i class="ph ${c.icon || 'ph-folder'} cat-icon"></i>
+                  <h3 class="cat-title">${c.name}</h3>
+                </div>
+                <i class="ph ph-caret-left cat-arrow"></i>
+              </div>
+              <p class="cat-desc">${c.description || ''}</p>
+            </div>
+          </a>
+        `).join('');
+      })
+      .catch(err => console.error('Failed to load categories:', err));
   }
 
   // ─── LOAD & RENDER PRODUCT DETAILS (product.html) ─────────────────────────
