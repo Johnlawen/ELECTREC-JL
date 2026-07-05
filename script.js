@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const grid = document.getElementById('featured-products-grid');
 
   if (grid) {
-    fetch('/api/store?key=jl_products')
+    fetch('https://electrec-jl.vercel.app/api/store?key=jl_products')
       .then(res => res.json())
       .then(data => {
         const products = data.data;
@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    fetch('/api/store?key=jl_products')
+    fetch('https://electrec-jl.vercel.app/api/store?key=jl_products')
       .then(res => res.json())
       .then(data => {
         const products = data.data;

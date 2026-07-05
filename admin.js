@@ -79,7 +79,7 @@ async function saveProducts(products) {
   localProducts = products;
   // Save to Upstash asynchronously
   try {
-    await fetch('/api/store?key=jl_products', {
+    await fetch('https://electrec-jl.vercel.app/api/store?key=jl_products', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(products)
@@ -97,7 +97,7 @@ async function saveOrders(orders) {
   localOrders = orders;
   // Save to Upstash asynchronously
   try {
-    await fetch('/api/store?key=jl_orders', {
+    await fetch('https://electrec-jl.vercel.app/api/store?key=jl_orders', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(orders)
@@ -119,7 +119,7 @@ function getCategories() {
 async function saveCategories(categories) {
   localCategories = categories;
   try {
-    await fetch('/api/store?key=jl_categories', {
+    await fetch('https://electrec-jl.vercel.app/api/store?key=jl_categories', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(categories)
@@ -133,7 +133,7 @@ async function saveCategories(categories) {
 async function loadDataAndRender() {
   showToast('טוען נתונים מהשרת...');
   try {
-    const pRes = await fetch('/api/store?key=jl_products');
+    const pRes = await fetch('https://electrec-jl.vercel.app/api/store?key=jl_products');
     const pData = await pRes.json();
     if (pData && pData.data && pData.data.length > 0) {
       localProducts = pData.data;
@@ -142,7 +142,7 @@ async function loadDataAndRender() {
       saveProducts(localProducts); // seed
     }
 
-    const oRes = await fetch('/api/store?key=jl_orders');
+    const oRes = await fetch('https://electrec-jl.vercel.app/api/store?key=jl_orders');
     const oData = await oRes.json();
     if (oData && oData.data && oData.data.length > 0) {
       localOrders = oData.data;
@@ -150,7 +150,7 @@ async function loadDataAndRender() {
       seedDemoOrders();
     }
 
-    const cRes = await fetch('/api/store?key=jl_categories');
+    const cRes = await fetch('https://electrec-jl.vercel.app/api/store?key=jl_categories');
     const cData = await cRes.json();
     if (cData && cData.data && cData.data.length > 0) {
       localCategories = cData.data;
