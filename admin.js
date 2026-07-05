@@ -29,7 +29,7 @@ function submitPin() {
   if (currentPin === ADMIN_PIN) {
     document.getElementById('login-overlay').classList.add('hidden');
     document.getElementById('admin-content').classList.add('visible');
-    renderDashboard();
+    loadDataAndRender();
   } else {
     const box = document.querySelector('.login-box');
     document.getElementById('pin-error').textContent = 'קוד שגוי, נסה שוב';
@@ -59,34 +59,87 @@ const DEFAULT_PRODUCTS = [
   { id: 6, name: 'גוף קיר דגם קוביה', price: 247, originalPrice: 290, stock: 15, category: 'קיר', description: 'גוף קיר מינימליסטי לכל חלל', image: 'https://images.unsplash.com/photo-1565814329452-e1efa11c5e89?q=80&w=400&auto=format&fit=crop' },
 ];
 
+let localProducts = null;
+let localOrders = null;
+
 function getProducts() {
-  const data = localStorage.getItem('jl_products');
-  return data ? JSON.parse(data) : DEFAULT_PRODUCTS;
+  return localProducts || DEFAULT_PRODUCTS;
 }
-function saveProducts(products) {
-  localStorage.setItem('jl_products', JSON.stringify(products));
+
+async function saveProducts(products) {
+  localProducts = products;
+  // Save to Upstash asynchronously
+  try {
+    await fetch('/api/store?key=jl_products', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(products)
+    });
+  } catch (err) {
+    console.error("Failed to save products:", err);
+  }
 }
+
 function getOrders() {
-  const data = localStorage.getItem('jl_orders');
-  return data ? JSON.parse(data) : [];
+  return localOrders || [];
 }
-function saveOrders(orders) {
-  localStorage.setItem('jl_orders', JSON.stringify(orders));
+
+async function saveOrders(orders) {
+  localOrders = orders;
+  // Save to Upstash asynchronously
+  try {
+    await fetch('/api/store?key=jl_orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(orders)
+    });
+  } catch (err) {
+    console.error("Failed to save orders:", err);
+  }
 }
+
 function getNextProductId() {
   const products = getProducts();
   return products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
 }
 
-// ─── DEMO ORDERS (seed once) ────────────────────────────────────────────────
+// ─── INIT DATA FROM UPSTASH ──────────────────────────────────────────────────
+async function loadDataAndRender() {
+  showToast('טוען נתונים מהשרת...');
+  try {
+    const pRes = await fetch('/api/store?key=jl_products');
+    const pData = await pRes.json();
+    if (pData && pData.data && pData.data.length > 0) {
+      localProducts = pData.data;
+    } else {
+      localProducts = DEFAULT_PRODUCTS;
+      saveProducts(localProducts); // seed
+    }
+
+    const oRes = await fetch('/api/store?key=jl_orders');
+    const oData = await oRes.json();
+    if (oData && oData.data && oData.data.length > 0) {
+      localOrders = oData.data;
+    } else {
+      seedDemoOrders();
+    }
+  } catch (e) {
+    console.error("Failed to load data from Upstash", e);
+    localProducts = DEFAULT_PRODUCTS;
+    localOrders = [];
+  }
+  
+  renderDashboard();
+  if (currentSection === 'products') renderProducts();
+  if (currentSection === 'orders') renderOrders();
+}
+
 function seedDemoOrders() {
-  if (localStorage.getItem('jl_orders_seeded')) return;
   const demoOrders = [
     { id: 'ORD-001', customer: { name: 'דוד לוי', phone: '052-1234567', email: 'david@example.com', address: 'רחוב הרצל 10, תל אביב' }, items: [{ productId: 1, name: 'גוף תאורה תלוי דגם ספרולה', price: 1790, qty: 1, image: 'https://images.unsplash.com/photo-1513506003901-1e6a229e9d15?q=80&w=400&auto=format&fit=crop' }], total: 1790, status: 'pending', date: new Date(Date.now() - 3600000).toISOString() },
     { id: 'ORD-002', customer: { name: 'שרה כהן', phone: '054-9876543', email: 'sara@example.com', address: 'שדרות בן גוריון 5, חיפה' }, items: [{ productId: 5, name: 'גוף צמודי תקרה LED', price: 443, qty: 2, image: 'https://images.unsplash.com/photo-1519710164239-da123dc03ef4?q=80&w=400&auto=format&fit=crop' }], total: 886, status: 'approved', date: new Date(Date.now() - 86400000).toISOString() },
   ];
   saveOrders(demoOrders);
-  localStorage.setItem('jl_orders_seeded', '1');
 }
 
 // ─── NAVIGATION ─────────────────────────────────────────────────────────────
@@ -384,5 +437,4 @@ function showToast(msg) {
 }
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
-seedDemoOrders();
-renderDashboard();
+// Data is now loaded dynamically in loadDataAndRender() when the user logs in.
