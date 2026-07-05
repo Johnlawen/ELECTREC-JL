@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ─── LOAD & RENDER SALES PAGE (sales.html) ─────────────────────────────────
   const salesGrid = document.querySelector('.sales-grid');
-  if (salesGrid && window.location.pathname.includes('sales.html')) {
+  if (salesGrid && window.location.pathname.includes('sales')) {
     fetch('https://electrec-jl.vercel.app/api/store?key=jl_products')
       .then(res => res.json())
       .then(data => {
@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ─── LOAD & RENDER CATEGORIES PAGE (categories.html) ──────────────────────
   const catGrid = document.querySelector('.category-cards-grid');
-  if (catGrid && window.location.pathname.includes('categories.html')) {
+  if (catGrid && window.location.pathname.includes('categories')) {
     fetch('https://electrec-jl.vercel.app/api/store?key=jl_categories')
       .then(res => res.json())
       .then(data => {
