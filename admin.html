@@ -8,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="i18n.css">
 </head>
 <body>
 
@@ -79,6 +80,12 @@
     <header class="admin-topbar">
       <h1 class="topbar-title" id="page-title">לוח בקרה</h1>
       <div class="topbar-actions">
+        <!-- Language Switcher -->
+        <div class="admin-lang-switcher" id="admin-lang-switcher">
+          <button class="admin-lang-btn active" data-lang="he" onclick="adminSelectLang('he')">🇮🇱 עברית</button>
+          <button class="admin-lang-btn" data-lang="ar" onclick="adminSelectLang('ar')">🇸🇦 العربية</button>
+          <button class="admin-lang-btn" data-lang="ru" onclick="adminSelectLang('ru')">🇷🇺 Русский</button>
+        </div>
         <button class="btn-admin-primary" id="topbar-action-btn" onclick="openAddProductModal()" style="display:none">
           <i class="ph ph-plus"></i> הוסף מוצר
         </button>
@@ -361,6 +368,7 @@
 
   <div class="toast" id="toast"></div>
 
+  <script src="i18n.js"></script>
   <script src="admin.js?v=3"></script>
 </body>
 </html>

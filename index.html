@@ -15,7 +15,8 @@
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="styles.css?v=4">
+  <link rel="stylesheet" href="styles.css?v=5">
+  <link rel="stylesheet" href="i18n.css">
 </head>
 
 <body>
@@ -29,7 +30,7 @@
       </div>
 
       <div class="search-bar">
-        <input type="text" placeholder="חיפוש מוצרים...">
+        <input type="text" data-i18n-placeholder="searchPlaceholder" placeholder="חיפוש מוצרים...">
         <i class="ph ph-magnifying-glass"></i>
       </div>
 
@@ -45,12 +46,11 @@
 
     <nav class="header-nav container">
       <ul>
-        <li><a href="index.html" class="active">דף הבית</a></li>
-        <li><a href="categories.html">קטגוריות</a></li>
-        <li><a href="sales.html">מבצעים</a></li>
-        <li><a href="contact.html">צור קשר</a></li>
-        <li><a href="about.html">אודותינו</a></li>
-
+        <li><a href="index.html" class="active" data-i18n="navHome">דף הבית</a></li>
+        <li><a href="categories.html" data-i18n="navCategories">קטגוריות</a></li>
+        <li><a href="sales.html" data-i18n="navSales">מבצעים</a></li>
+        <li><a href="contact.html" data-i18n="navContact">צור קשר</a></li>
+        <li><a href="about.html" data-i18n="navAbout">אודותינו</a></li>
       </ul>
     </nav>
   </header>
@@ -62,36 +62,36 @@
     </div>
     <div class="container hero-content">
       <div class="hero-text-box">
-        <h1>עיצוב. <span class="text-red">אור.</span> השראה</h1>
-        <p class="hero-subtitle">גופי תאורה מעוצבים שמשדרגים כל חלל</p>
+        <h1 data-i18n="heroTitle">עיצוב. <span class="text-red">אור.</span> השראה</h1>
+        <p class="hero-subtitle" data-i18n="heroSubtitle">גופי תאורה מעוצבים שמשדרגים כל חלל</p>
 
         <div class="hero-features">
           <div class="feature-item">
             <div class="feature-icon"><i class="ph ph-truck"></i></div>
             <div class="feature-text">
-              <strong>משלוח מהיר</strong>
-              <span>לכל חלקי הארץ</span>
+              <strong data-i18n="heroFeat1Title">משלוח מהיר</strong>
+              <span data-i18n="heroFeat1Sub">לכל חלקי הארץ</span>
             </div>
           </div>
           <div class="feature-item">
             <div class="feature-icon"><i class="ph ph-shield-check"></i></div>
             <div class="feature-text">
-              <strong>איכות ללא פשרות</strong>
-              <span>חומרים מובחרים</span>
+              <strong data-i18n="heroFeat2Title">איכות ללא פשרות</strong>
+              <span data-i18n="heroFeat2Sub">חומרים מובחרים</span>
             </div>
           </div>
           <div class="feature-item">
             <div class="feature-icon"><i class="ph ph-sketch-logo"></i></div>
             <div class="feature-text">
-              <strong>עיצוב יוקרתי</strong>
-              <span>מגוון גופים מעוצבים</span>
+              <strong data-i18n="heroFeat3Title">עיצוב יוקרתי</strong>
+              <span data-i18n="heroFeat3Sub">מגוון גופים מעוצבים</span>
             </div>
           </div>
         </div>
 
         <div class="hero-buttons">
-          <a href="#" class="btn btn-primary">לצפייה במוצרים</a>
-          <a href="#" class="btn btn-outline">קטלוג מלא</a>
+          <a href="#" class="btn btn-primary" data-i18n="heroBtnView">לצפייה במוצרים</a>
+          <a href="#" class="btn btn-outline" data-i18n="heroBtnCatalog">קטלוג מלא</a>
         </div>
       </div>
     </div>
@@ -158,7 +158,7 @@
   <!-- Featured Products Section -->
   <section class="featured-products section container">
     <div class="section-header">
-      <h2 class="section-title">מוצרים נבחרים</h2>
+      <h2 class="section-title" data-i18n="featuredTitle">מוצרים נבחרים</h2>
       <div class="section-line"></div>
     </div>
 
@@ -320,7 +320,8 @@
     </div>
   </footer>
 
-  <script src="script.js?v=5"></script>
+  <script src="i18n.js"></script>
+  <script src="script.js?v=6"></script>
 </body>
 
 </html>

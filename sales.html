@@ -15,7 +15,8 @@
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="styles.css?v=4">
+  <link rel="stylesheet" href="styles.css?v=5">
+  <link rel="stylesheet" href="i18n.css">
 </head>
 
 <body class="bg-light">
@@ -31,7 +32,7 @@
       </div>
 
       <div class="search-bar">
-        <input type="text" placeholder="חיפוש מוצרים...">
+        <input type="text" data-i18n-placeholder="searchPlaceholder" placeholder="חיפוש מוצרים...">
         <i class="ph ph-magnifying-glass"></i>
       </div>
 
@@ -47,12 +48,11 @@
 
     <nav class="header-nav container">
       <ul>
-        <li><a href="index.html">דף הבית</a></li>
-        <li><a href="categories.html">קטגוריות</a></li>
-        <li><a href="sales.html" class="active">מבצעים</a></li>
-        <li><a href="contact.html">צור קשר</a></li>
-        <li><a href="about.html">אודותינו</a></li>
-
+        <li><a href="index.html" data-i18n="navHome">דף הבית</a></li>
+        <li><a href="categories.html" data-i18n="navCategories">קטגוריות</a></li>
+        <li><a href="sales.html" class="active" data-i18n="navSales">מבצעים</a></li>
+        <li><a href="contact.html" data-i18n="navContact">צור קשר</a></li>
+        <li><a href="about.html" data-i18n="navAbout">אודותינו</a></li>
       </ul>
     </nav>
   </header>
@@ -170,7 +170,8 @@
     </div>
   </footer>
 
-  <script src="script.js?v=5"></script>
+  <script src="i18n.js"></script>
+  <script src="script.js?v=6"></script>
 </body>
 
 </html>

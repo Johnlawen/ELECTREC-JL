@@ -48,6 +48,25 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') submitPin();
 });
 
+// ─── ADMIN LANGUAGE SWITCHER ──────────────────────────────────────────────────
+function adminSelectLang(lang) {
+  // Use the shared i18n module (loaded before admin.js)
+  if (typeof setLang === 'function') setLang(lang);
+  // Update active button highlight
+  document.querySelectorAll('.admin-lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+}
+
+// Apply saved lang on load
+document.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('jl_lang') || 'he';
+  // Mark the correct admin button
+  document.querySelectorAll('.admin-lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === saved);
+  });
+});
+
 // ─── DATA STORE ───────────────────────────────────────────────────────────────
 
 const DEFAULT_PRODUCTS = [
