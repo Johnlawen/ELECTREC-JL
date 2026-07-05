@@ -628,23 +628,23 @@ function renderSales() {
   }
   grid.innerHTML = sales.map(p => {
     const discount = Math.round((1 - (p.price / p.originalPrice)) * 100);
-    return \`
+    return `
     <div class="product-admin-card">
       <div class="product-admin-img">
-        <div style="position:absolute;top:10px;right:10px;background:var(--primary-red);color:white;padding:2px 8px;border-radius:12px;font-weight:bold;font-size:0.8rem;z-index:2">\${discount}%-</div>
-        <img src="\${p.image || 'https://via.placeholder.com/260x180?text=No+Image'}" onerror="this.src='https://via.placeholder.com/260x180?text=No+Image'">
+        <div style="position:absolute;top:10px;right:10px;background:var(--primary-red);color:white;padding:2px 8px;border-radius:12px;font-weight:bold;font-size:0.8rem;z-index:2">${discount}%-</div>
+        <img src="${p.image || 'https://via.placeholder.com/260x180?text=No+Image'}" onerror="this.src='https://via.placeholder.com/260x180?text=No+Image'">
       </div>
       <div class="product-admin-body">
-        <div class="product-admin-name">\${p.name}</div>
+        <div class="product-admin-name">${p.name}</div>
         <div class="product-admin-meta">
-          <span class="product-price">₪\${p.price.toLocaleString()}</span>
-          <span style="text-decoration:line-through;color:#94a3b8">₪\${p.originalPrice.toLocaleString()}</span>
+          <span class="product-price">₪${p.price.toLocaleString()}</span>
+          <span style="text-decoration:line-through;color:#94a3b8">₪${p.originalPrice.toLocaleString()}</span>
         </div>
       </div>
       <div class="product-admin-actions">
-        <button class="btn-icon" onclick="openEditProductModal(\${p.id})"><i class="ph ph-pencil"></i> שנה מחיר/מבצע</button>
+        <button class="btn-icon" onclick="openEditProductModal(${p.id})"><i class="ph ph-pencil"></i> שנה מחיר/מבצע</button>
       </div>
-    </div>\`
+    </div>`
   }).join('');
 }
 

@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const placeholderImg = 'https://images.unsplash.com/photo-1513506003901-1e6a229e9d15?q=80&w=400&auto=format&fit=crop';
 
     card.innerHTML = `
-      <div class="card-clickable-area" style="cursor:pointer;" onclick="window.location.href='product.html?id=${p.id}'">
+      <div class="card-clickable-area" style="cursor:pointer;" onclick="window.location.href='product?id=${p.id}'">
         <div class="product-img">
           <img src="${p.image || placeholderImg}" alt="${p.name}"
             onerror="this.src='${placeholderImg}'">
