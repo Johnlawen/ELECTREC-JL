@@ -224,11 +224,13 @@
           <textarea id="p-description" rows="3" placeholder="תיאור קצר על המוצר..."></textarea>
         </div>
         <div class="form-group">
-          <label>כתובת תמונה (URL)</label>
-          <input type="text" id="p-image" placeholder="https://...">
-          <div class="img-preview-wrap">
-            <img id="img-preview" src="" alt="" style="display:none">
+          <label>תמונות המוצר</label>
+          <div class="file-upload-zone" id="p-image-dropzone" onclick="document.getElementById('p-image-input').click()">
+            <input type="file" id="p-image-input" multiple accept="image/*" style="display:none">
+            <i class="ph ph-upload-simple" style="font-size:2rem;color:var(--text-muted);margin-bottom:0.5rem"></i>
+            <p style="margin:0;color:var(--text-muted)">לחץ כאן או גרור תמונות</p>
           </div>
+          <div class="image-previews-grid" id="p-image-previews"></div>
         </div>
       </div>
       <div class="modal-footer">
@@ -260,11 +262,13 @@
           <textarea id="c-description" rows="2" placeholder="תיאור קצר..."></textarea>
         </div>
         <div class="form-group">
-          <label>כתובת תמונה (URL)</label>
-          <input type="text" id="c-image" placeholder="https://...">
-          <div class="img-preview-wrap">
-            <img id="cat-img-preview" src="" alt="" style="display:none">
+          <label>תמונת קטגוריה</label>
+          <div class="file-upload-zone" id="c-image-dropzone" onclick="document.getElementById('c-image-input').click()">
+            <input type="file" id="c-image-input" accept="image/*" style="display:none">
+            <i class="ph ph-upload-simple" style="font-size:2rem;color:var(--text-muted);margin-bottom:0.5rem"></i>
+            <p style="margin:0;color:var(--text-muted)">לחץ כאן או גרור תמונה</p>
           </div>
+          <div class="image-previews-grid" id="c-image-previews"></div>
         </div>
       </div>
       <div class="modal-footer">

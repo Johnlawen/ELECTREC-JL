@@ -1538,8 +1538,8 @@ img {
   position: absolute;
   top: 0.75rem;
   right: 0.75rem;
-  background: #fee2e2;
-  color: #b91c1c;
+  background: #f1f5f9;
+  color: #64748b;
   font-size: 0.75rem;
   font-weight: 700;
   padding: 0.2rem 0.6rem;
@@ -1581,5 +1581,102 @@ img {
   background: #e5e7eb;
   border-radius: 4px;
   margin: 0.5rem 3rem 1.5rem;
+}
+
+/* ─── PRODUCT DETAIL PAGE ─── */
+.product-page {
+  padding: 4rem 0;
+}
+.product-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: flex-start;
+}
+@media (max-width: 768px) {
+  .product-detail-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+.product-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.main-image-wrap {
+  width: 100%;
+  aspect-ratio: 1;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.main-image-wrap img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+.thumbnails {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+.thumbnails::-webkit-scrollbar {
+  height: 6px;
+}
+.thumbnails::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+.thumbnail {
+  flex: 0 0 80px;
+  width: 80px;
+  height: 80px;
+  border: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  overflow: hidden;
+  background: var(--white);
+  transition: border-color 0.2s;
+}
+.thumbnail.active {
+  border-color: var(--primary-red);
+}
+.thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.product-info {
+  display: flex;
+  flex-direction: column;
+}
+.product-info h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+.product-info .price {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary-red);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.product-info .original-price {
+  font-size: 1.25rem;
+  color: var(--text-muted);
+  text-decoration: line-through;
+}
+.product-info .desc {
+  font-size: 1.1rem;
+  color: var(--text-dark);
+  line-height: 1.6;
 }
 

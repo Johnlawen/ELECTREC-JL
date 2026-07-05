@@ -301,12 +301,79 @@ function stockClass(s) { return s === 0 ? 'stock-out' : s <= 5 ? 'stock-low' : '
 function stockText(s) { return s === 0 ? 'אזל המלאי' : s <= 5 ? `${s} נותרו` : `${s} במלאי`; }
 
 // ─── PRODUCT MODAL ───────────────────────────────────────────────────────────
+let currentProductImages = [];
+
+function renderImagePreviews() {
+  const container = document.getElementById('p-image-previews');
+  container.innerHTML = currentProductImages.map((src, idx) => `
+    <div class="image-preview-item">
+      <img src="${src}">
+      <button class="image-preview-remove" onclick="removeProductImage(event, ${idx})"><i class="ph ph-x"></i></button>
+    </div>
+  `).join('');
+}
+
+function removeProductImage(e, idx) {
+  e.preventDefault();
+  e.stopPropagation();
+  currentProductImages.splice(idx, 1);
+  renderImagePreviews();
+}
+
+// Handle file selection and compression
+function handleImageFiles(files) {
+  Array.from(files).forEach(file => {
+    if (!file.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        const MAX_WIDTH = 800;
+        if (width > MAX_WIDTH) {
+          height = Math.round((height * MAX_WIDTH) / width);
+          width = MAX_WIDTH;
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+        currentProductImages.push(dataUrl);
+        renderImagePreviews();
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// Drag & Drop Listeners
+const dropzone = document.getElementById('p-image-dropzone');
+dropzone.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  dropzone.classList.add('dragover');
+});
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  handleImageFiles(e.dataTransfer.files);
+});
+document.getElementById('p-image-input').addEventListener('change', (e) => {
+  handleImageFiles(e.target.files);
+  e.target.value = ''; // reset
+});
+
 function openAddProductModal() {
   document.getElementById('modal-title').textContent = 'הוסף מוצר חדש';
   document.getElementById('edit-product-id').value = '';
-  ['p-name','p-price','p-original-price','p-stock','p-description','p-image'].forEach(id => document.getElementById(id).value = '');
+  ['p-name','p-price','p-original-price','p-stock','p-description'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('p-category').value = 'תלייה';
-  document.getElementById('img-preview').style.display = 'none';
+  currentProductImages = [];
+  renderImagePreviews();
   document.getElementById('product-modal').classList.add('open');
 }
 function openEditProductModal(id) {
@@ -320,20 +387,23 @@ function openEditProductModal(id) {
   document.getElementById('p-stock').value = product.stock;
   document.getElementById('p-category').value = product.category;
   document.getElementById('p-description').value = product.description || '';
-  document.getElementById('p-image').value = product.image || '';
-  const preview = document.getElementById('img-preview');
-  if (product.image) { preview.src = product.image; preview.style.display = 'block'; }
-  else { preview.style.display = 'none'; }
+  
+  // Load images
+  if (product.images && product.images.length > 0) {
+    currentProductImages = [...product.images];
+  } else if (product.image) {
+    currentProductImages = [product.image];
+  } else {
+    currentProductImages = [];
+  }
+  renderImagePreviews();
+  
   document.getElementById('product-modal').classList.add('open');
 }
+
 function closeProductModal() {
   document.getElementById('product-modal').classList.remove('open');
 }
-document.getElementById('p-image').addEventListener('input', function() {
-  const preview = document.getElementById('img-preview');
-  if (this.value) { preview.src = this.value; preview.style.display = 'block'; }
-  else { preview.style.display = 'none'; }
-});
 
 function saveProduct() {
   const name = document.getElementById('p-name').value.trim();
@@ -347,7 +417,8 @@ function saveProduct() {
     originalPrice: parseFloat(document.getElementById('p-original-price').value) || 0,
     category: document.getElementById('p-category').value,
     description: document.getElementById('p-description').value.trim(),
-    image: document.getElementById('p-image').value.trim(),
+    images: currentProductImages,
+    image: currentProductImages.length > 0 ? currentProductImages[0] : ''
   };
   if (editId) {
     const idx = products.findIndex(p => p.id === parseInt(editId));
@@ -424,11 +495,77 @@ function renderCategories() {
     </div>`).join('');
 }
 
+// ─── CATEGORIES MODAL LOGIC ────────────────────────────────────────────────
+let currentCategoryImages = [];
+
+function renderCategoryPreviews() {
+  const container = document.getElementById('c-image-previews');
+  container.innerHTML = currentCategoryImages.map((src, idx) => `
+    <div class="image-preview-item">
+      <img src="${src}">
+      <button class="image-preview-remove" onclick="removeCategoryImage(event, ${idx})"><i class="ph ph-x"></i></button>
+    </div>
+  `).join('');
+}
+
+function removeCategoryImage(e, idx) {
+  e.preventDefault();
+  e.stopPropagation();
+  currentCategoryImages.splice(idx, 1);
+  renderCategoryPreviews();
+}
+
+function handleCategoryFiles(files) {
+  Array.from(files).forEach(file => {
+    if (!file.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        const MAX_WIDTH = 800;
+        if (width > MAX_WIDTH) {
+          height = Math.round((height * MAX_WIDTH) / width);
+          width = MAX_WIDTH;
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+        currentCategoryImages = [dataUrl]; // Only keep one image for category
+        renderCategoryPreviews();
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+const catDropzone = document.getElementById('c-image-dropzone');
+catDropzone.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  catDropzone.classList.add('dragover');
+});
+catDropzone.addEventListener('dragleave', () => catDropzone.classList.remove('dragover'));
+catDropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  catDropzone.classList.remove('dragover');
+  handleCategoryFiles(e.dataTransfer.files);
+});
+document.getElementById('c-image-input').addEventListener('change', (e) => {
+  handleCategoryFiles(e.target.files);
+  e.target.value = '';
+});
+
 function openAddCategoryModal() {
   document.getElementById('cat-modal-title').textContent = 'הוסף קטגוריה חדשה';
   document.getElementById('edit-category-id').value = '';
-  ['c-name','c-icon','c-description','c-image'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('cat-img-preview').style.display = 'none';
+  ['c-name','c-icon','c-description'].forEach(id => document.getElementById(id).value = '');
+  currentCategoryImages = [];
+  renderCategoryPreviews();
   document.getElementById('category-modal').classList.add('open');
 }
 
@@ -440,10 +577,14 @@ function openEditCategoryModal(id) {
   document.getElementById('c-name').value = cat.name;
   document.getElementById('c-icon').value = cat.icon || '';
   document.getElementById('c-description').value = cat.description || '';
-  document.getElementById('c-image').value = cat.image || '';
-  const preview = document.getElementById('cat-img-preview');
-  if (cat.image) { preview.src = cat.image; preview.style.display = 'block'; }
-  else { preview.style.display = 'none'; }
+  
+  if (cat.image) {
+    currentCategoryImages = [cat.image];
+  } else {
+    currentCategoryImages = [];
+  }
+  renderCategoryPreviews();
+  
   document.getElementById('category-modal').classList.add('open');
 }
 
@@ -460,7 +601,7 @@ function saveCategory() {
     name,
     icon: document.getElementById('c-icon').value.trim() || 'ph-folder',
     description: document.getElementById('c-description').value.trim(),
-    image: document.getElementById('c-image').value.trim(),
+    image: currentCategoryImages.length > 0 ? currentCategoryImages[0] : ''
   };
   if (editId) {
     const idx = cats.findIndex(c => c.id === parseInt(editId));
