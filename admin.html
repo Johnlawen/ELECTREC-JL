@@ -223,6 +223,56 @@
           <label>תיאור המוצר</label>
           <textarea id="p-description" rows="3" placeholder="תיאור קצר על המוצר..."></textarea>
         </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>צבעים (מופרדים בפסיק)</label>
+            <input type="text" id="p-colors" placeholder="שחור, זהב, לבן">
+          </div>
+          <div class="form-group">
+            <label>מידות (מופרדות בפסיק)</label>
+            <input type="text" id="p-sizes" placeholder="קוטר 40 ס&quot;מ, קוטר 60 ס&quot;מ">
+          </div>
+        </div>
+        
+        <h4 style="margin: 1.5rem 0 0.5rem 0; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; color: var(--text-dark);">פרטים טכניים</h4>
+        <div class="form-row">
+          <div class="form-group">
+            <label>מק&quot;ט</label>
+            <input type="text" id="p-sku" placeholder="למשל: RL-60-BK">
+          </div>
+          <div class="form-group">
+            <label>סוג תאורה</label>
+            <input type="text" id="p-light-type" placeholder="למשל: LED מובנה">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>הספק</label>
+            <input type="text" id="p-power" placeholder="למשל: 48W">
+          </div>
+          <div class="form-group">
+            <label>גוון אור / טמפרטורה</label>
+            <input type="text" id="p-color-temp" placeholder="למשל: אור חם - 3000K">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>מתח</label>
+            <input type="text" id="p-voltage" placeholder="למשל: 220-240V">
+          </div>
+          <div class="form-group">
+            <label>חומר</label>
+            <input type="text" id="p-material" placeholder="למשל: אלומיניום + סיליקון">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>אחריות</label>
+            <input type="text" id="p-warranty" placeholder="למשל: שנה">
+          </div>
+          <div class="form-group">
+          </div>
+        </div>
         <div class="form-group">
           <label>תמונות המוצר</label>
           <div class="file-upload-zone" id="p-image-dropzone" onclick="document.getElementById('p-image-input').click()">
@@ -311,6 +361,6 @@
 
   <div class="toast" id="toast"></div>
 
-  <script src="admin.js?v=2"></script>
+  <script src="admin.js?v=3"></script>
 </body>
 </html>

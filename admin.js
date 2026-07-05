@@ -370,7 +370,10 @@ document.getElementById('p-image-input').addEventListener('change', (e) => {
 function openAddProductModal() {
   document.getElementById('modal-title').textContent = 'הוסף מוצר חדש';
   document.getElementById('edit-product-id').value = '';
-  ['p-name','p-price','p-original-price','p-stock','p-description'].forEach(id => document.getElementById(id).value = '');
+  ['p-name','p-price','p-original-price','p-stock','p-description','p-colors','p-sizes','p-sku','p-light-type','p-power','p-color-temp','p-voltage','p-material','p-warranty'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
   document.getElementById('p-category').value = 'תלייה';
   currentProductImages = [];
   renderImagePreviews();
@@ -387,6 +390,15 @@ function openEditProductModal(id) {
   document.getElementById('p-stock').value = product.stock;
   document.getElementById('p-category').value = product.category;
   document.getElementById('p-description').value = product.description || '';
+  document.getElementById('p-colors').value = product.colors ? product.colors.join(', ') : '';
+  document.getElementById('p-sizes').value = product.sizes ? product.sizes.join(', ') : '';
+  document.getElementById('p-sku').value = product.sku || '';
+  document.getElementById('p-light-type').value = product.lightType || '';
+  document.getElementById('p-power').value = product.power || '';
+  document.getElementById('p-color-temp').value = product.colorTemp || '';
+  document.getElementById('p-voltage').value = product.voltage || '';
+  document.getElementById('p-material').value = product.material || '';
+  document.getElementById('p-warranty').value = product.warranty || '';
   
   // Load images
   if (product.images && product.images.length > 0) {
@@ -412,13 +424,28 @@ function saveProduct() {
   if (!name || isNaN(price) || isNaN(stock)) { showToast('אנא מלא את כל השדות החובה'); return; }
   const products = getProducts();
   const editId = document.getElementById('edit-product-id').value;
+  
+  const colorsStr = document.getElementById('p-colors').value.trim();
+  const sizesStr = document.getElementById('p-sizes').value.trim();
+  const colors = colorsStr ? colorsStr.split(',').map(s => s.trim()).filter(Boolean) : [];
+  const sizes = sizesStr ? sizesStr.split(',').map(s => s.trim()).filter(Boolean) : [];
+
   const productData = {
     name, price, stock,
     originalPrice: parseFloat(document.getElementById('p-original-price').value) || 0,
     category: document.getElementById('p-category').value,
     description: document.getElementById('p-description').value.trim(),
     images: currentProductImages,
-    image: currentProductImages.length > 0 ? currentProductImages[0] : ''
+    image: currentProductImages.length > 0 ? currentProductImages[0] : '',
+    colors,
+    sizes,
+    sku: document.getElementById('p-sku').value.trim(),
+    lightType: document.getElementById('p-light-type').value.trim(),
+    power: document.getElementById('p-power').value.trim(),
+    colorTemp: document.getElementById('p-color-temp').value.trim(),
+    voltage: document.getElementById('p-voltage').value.trim(),
+    material: document.getElementById('p-material').value.trim(),
+    warranty: document.getElementById('p-warranty').value.trim()
   };
   if (editId) {
     const idx = products.findIndex(p => p.id === parseInt(editId));

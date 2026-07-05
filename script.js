@@ -187,6 +187,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const images = (p.images && p.images.length > 0) ? p.images : [p.image || 'https://images.unsplash.com/photo-1513506003901-1e6a229e9d15?q=80&w=400&auto=format&fit=crop'];
         const hasDiscount = p.originalPrice && p.originalPrice > p.price;
 
+        const colorMap = {
+          'שחור': '#000000',
+          'זהב': '#eab308',
+          'לבן': '#ffffff',
+          'כסף': '#c0c0c0',
+          'ברונזה': '#cd7f32',
+          'אפור': '#808080',
+          'עץ': '#8b5a2b',
+          'קפה': '#6f4e37',
+          'שקוף': 'rgba(255,255,255,0.4)'
+        };
+
+        const getColorStyle = (c) => {
+          const clean = c.trim();
+          const hex = colorMap[clean] || '#cbd5e1';
+          const border = clean === 'לבן' ? 'border: 1px solid #cbd5e1;' : '';
+          return `background-color: ${hex}; ${border}`;
+        };
+
         productDetailContainer.innerHTML = `
           <div class="breadcrumb-nav">
             <a href="index.html">דף הבית</a>
@@ -242,23 +261,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
               <div class="divider"></div>
 
+              ${p.colors && p.colors.length > 0 ? `
               <div class="variant-group">
                 <label>צבע גוף תאורה</label>
                 <div class="variant-options colors">
-                  <button class="variant-btn" onclick="document.querySelectorAll('.variant-options.colors .variant-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active');"><span class="color-dot black"></span> שחור</button>
-                  <button class="variant-btn active" onclick="document.querySelectorAll('.variant-options.colors .variant-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active');"><span class="color-dot gold"></span> זהב</button>
-                  <button class="variant-btn" onclick="document.querySelectorAll('.variant-options.colors .variant-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active');"><span class="color-dot white"></span> לבן</button>
+                  ${p.colors.map((c, idx) => `
+                    <button class="variant-btn ${idx === 0 ? 'active' : ''}" onclick="document.querySelectorAll('.variant-options.colors .variant-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active');">
+                      <span class="color-dot" style="${getColorStyle(c)}"></span> ${c}
+                    </button>
+                  `).join('')}
                 </div>
               </div>
+              ` : ''}
               
+              ${p.sizes && p.sizes.length > 0 ? `
               <div class="variant-group">
                 <label>מידה</label>
                 <div class="variant-options sizes">
-                  <button class="variant-btn" onclick="document.querySelectorAll('.variant-options.sizes .variant-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active');">קוטר 40 ס"מ</button>
-                  <button class="variant-btn active" onclick="document.querySelectorAll('.variant-options.sizes .variant-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active');">קוטר 60 ס"מ</button>
-                  <button class="variant-btn" onclick="document.querySelectorAll('.variant-options.sizes .variant-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active');">קוטר 80 ס"מ</button>
+                  ${p.sizes.map((s, idx) => `
+                    <button class="variant-btn ${idx === 0 ? 'active' : ''}" onclick="document.querySelectorAll('.variant-options.sizes .variant-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active');">
+                      ${s}
+                    </button>
+                  `).join('')}
                 </div>
               </div>
+              ` : ''}
 
               ${p.stock === 0 ? '<div style="color:var(--primary-red);font-weight:700;font-size:1.1rem;margin:1rem 0">אזל המלאי</div>' : ''}
 
@@ -304,13 +331,13 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="technical-details">
               <h3>פרטים טכניים</h3>
               <div class="tech-table">
-                <div class="tech-row"><span>מק"ט</span><strong>JL-${p.id}</strong></div>
-                <div class="tech-row"><span>סוג תאורה</span><strong>LED מובנה</strong></div>
-                <div class="tech-row"><span>הספק</span><strong>48W</strong></div>
-                <div class="tech-row"><span>גוון אור</span><strong>מתחלף לבחירה</strong></div>
-                <div class="tech-row"><span>מתח</span><strong>220-240V</strong></div>
-                <div class="tech-row"><span>חומר</span><strong>אלומיניום</strong></div>
-                <div class="tech-row"><span>אחריות</span><strong>שנה</strong></div>
+                <div class="tech-row"><span>מק"ט</span><strong>${p.sku || `JL-${p.id}`}</strong></div>
+                ${p.lightType ? `<div class="tech-row"><span>סוג תאורה</span><strong>${p.lightType}</strong></div>` : ''}
+                ${p.power ? `<div class="tech-row"><span>הספק</span><strong>${p.power}</strong></div>` : ''}
+                ${p.colorTemp ? `<div class="tech-row"><span>גוון אור</span><strong>${p.colorTemp}</strong></div>` : ''}
+                ${p.voltage ? `<div class="tech-row"><span>מתח</span><strong>${p.voltage}</strong></div>` : ''}
+                ${p.material ? `<div class="tech-row"><span>חומר</span><strong>${p.material}</strong></div>` : ''}
+                ${p.warranty ? `<div class="tech-row"><span>אחריות</span><strong>${p.warranty}</strong></div>` : ''}
               </div>
             </div>
 
