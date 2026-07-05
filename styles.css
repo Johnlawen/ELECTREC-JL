@@ -1680,3 +1680,88 @@ img {
   line-height: 1.6;
 }
 
+
+/* PRODUCT DETAIL NEW DESIGN */
+.breadcrumb-nav { display: flex; gap: 0.5rem; align-items: center; color: #64748b; font-size: 0.9rem; margin-bottom: 2rem; }
+.breadcrumb-nav a { color: #64748b; text-decoration: none; }
+.breadcrumb-nav .current { color: #0f172a; font-weight: 500; }
+
+.product-top-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 4rem; margin-bottom: 4rem; }
+
+.product-images-section { display: flex; gap: 1rem; }
+.thumbnail-list { display: flex; flex-direction: column; gap: 1rem; width: 80px; }
+.thumb-item { width: 80px; height: 80px; border-radius: 8px; border: 1px solid #e2e8f0; overflow: hidden; cursor: pointer; opacity: 0.6; transition: 0.3s; }
+.thumb-item.active { border: 2px solid var(--primary-red); opacity: 1; }
+.thumb-item img { width: 100%; height: 100%; object-fit: cover; }
+
+.main-image { flex: 1; border-radius: 12px; overflow: hidden; background: #f8fafc; }
+.main-image img { width: 100%; height: 100%; object-fit: cover; }
+
+.product-info-section { position: relative; }
+.wishlist-icon-top { position: absolute; top: 0; left: 0; width: 40px; height: 40px; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.2rem; transition: 0.2s; }
+.wishlist-icon-top:hover { border-color: var(--primary-red); color: var(--primary-red); }
+
+.category-tag { color: var(--primary-red); font-weight: 600; font-size: 0.95rem; margin-bottom: 0.5rem; }
+.product-main-title { font-size: 2rem; font-weight: 800; color: #0f172a; margin-bottom: 0.5rem; }
+.product-reviews { display: flex; gap: 0.5rem; align-items: center; margin-bottom: 1.5rem; }
+.product-reviews .stars { color: #eab308; display: flex; gap: 0.2rem; }
+.product-reviews .review-count { color: #64748b; font-size: 0.9rem; }
+
+.product-short-desc { color: #475569; line-height: 1.6; margin-bottom: 1.5rem; }
+
+.product-price-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.2rem; }
+.discount-badge { background: var(--primary-red); color: white; padding: 4px 12px; border-radius: 4px; font-weight: bold; font-size: 1.1rem; }
+.current-price { font-size: 2.5rem; font-weight: 800; color: var(--primary-red); }
+.old-price { font-size: 1.2rem; color: #94a3b8; text-decoration: line-through; margin-top: 0.5rem; }
+.tax-shipping-note { color: #475569; font-size: 0.9rem; margin-bottom: 1.5rem; }
+
+.divider { height: 1px; background: #e2e8f0; margin: 1.5rem 0; }
+
+.variant-group { margin-bottom: 1.5rem; }
+.variant-group label { display: block; font-weight: 600; margin-bottom: 0.8rem; font-size: 0.95rem; }
+.variant-options { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+.variant-btn { border: 1px solid #e2e8f0; background: white; padding: 0.6rem 1.5rem; border-radius: 6px; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; color: #334155; transition: 0.2s; }
+.variant-btn:hover { border-color: #cbd5e1; }
+.variant-btn.active { border-color: var(--primary-red); color: var(--primary-red); font-weight: 600; }
+.color-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+.color-dot.black { background: #000; }
+.color-dot.gold { background: #eab308; }
+.color-dot.white { background: #fff; border: 1px solid #e2e8f0; }
+
+.quantity-add-row { display: flex; gap: 1rem; align-items: stretch; margin-top: 2rem; margin-bottom: 1rem; height: 50px; }
+.quantity-selector { display: flex; border: 1px solid #e2e8f0; border-radius: 6px; width: 120px; overflow: hidden; }
+.qty-btn { background: white; border: none; width: 40px; cursor: pointer; font-size: 1.2rem; color: #64748b; }
+.qty-input { width: 40px; border: none; border-right: 1px solid #e2e8f0; border-left: 1px solid #e2e8f0; text-align: center; font-weight: 600; font-size: 1.1rem; }
+.btn-add-main { flex: 1; background: var(--primary-red); color: white; border: none; border-radius: 6px; font-size: 1.2rem; font-weight: 700; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 0.5rem; transition: 0.2s; }
+.btn-add-main:hover { background: #991b1b; }
+
+.btn-buy-now { width: 100%; background: white; color: #0f172a; border: 1px solid #e2e8f0; padding: 1rem; border-radius: 6px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: 0.2s; margin-bottom: 2rem; }
+.btn-buy-now:hover { border-color: var(--primary-red); color: var(--primary-red); }
+
+.trust-badges-box { background: #f8fafc; border-radius: 8px; padding: 1.5rem; display: flex; justify-content: space-between; gap: 1rem; }
+.trust-badge { display: flex; align-items: center; gap: 0.8rem; }
+.trust-badge i { font-size: 1.8rem; color: #64748b; }
+.trust-text { display: flex; flex-direction: column; }
+.trust-text strong { font-size: 0.9rem; color: #0f172a; }
+.trust-text span { font-size: 0.8rem; color: #64748b; }
+
+.product-bottom-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 4rem; margin-top: 4rem; border-top: 1px solid #e2e8f0; padding-top: 4rem; }
+
+.technical-details h3 { font-size: 1.3rem; margin-bottom: 1.5rem; font-weight: 700; color: #0f172a; }
+.tech-row { display: flex; justify-content: space-between; padding: 0.8rem 0; border-bottom: 1px solid #f1f5f9; font-size: 0.95rem; }
+.tech-row span { color: #64748b; }
+.tech-row strong { color: #0f172a; font-weight: 500; }
+
+.product-tabs-header { display: flex; border-bottom: 1px solid #e2e8f0; margin-bottom: 2rem; gap: 2rem; }
+.tab-btn { background: none; border: none; padding: 1rem 0; font-size: 1.1rem; font-weight: 500; color: #64748b; cursor: pointer; position: relative; }
+.tab-btn.active { color: var(--primary-red); font-weight: 700; }
+.tab-btn.active::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px; background: var(--primary-red); }
+.tab-content { color: #475569; line-height: 1.8; }
+
+@media (max-width: 900px) {
+  .product-top-grid, .product-bottom-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .trust-badges-box { flex-direction: column; gap: 1.5rem; }
+  .product-images-section { flex-direction: column-reverse; }
+  .thumbnail-list { flex-direction: row; width: 100%; overflow-x: auto; }
+  .thumb-item { flex: 0 0 80px; }
+}

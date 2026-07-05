@@ -184,145 +184,53 @@ document.addEventListener('DOMContentLoaded', () => {
         const hasDiscount = p.originalPrice && p.originalPrice > p.price;
 
         productDetailContainer.innerHTML = `
-          <div class="breadcrumb-nav">
-            <a href="index.html">דף הבית</a>
-            <i class="ph ph-caret-left"></i>
-            <a href="categories.html">${p.category || 'כללי'}</a>
-            <i class="ph ph-caret-left"></i>
-            <span class="current">${p.name}</span>
-          </div>
-
-          <div class="product-top-grid">
-            <div class="product-images-section">
+          <div class="product-detail-grid">
+            <div class="product-gallery">
+              <div class="main-image-wrap">
+                <img id="main-product-img" src="${images[0]}" alt="${p.name}">
+              </div>
               ${images.length > 1 ? `
-              <div class="thumbnail-list">
+              <div class="thumbnails">
                 ${images.map((img, idx) => `
-                  <div class="thumb-item ${idx === 0 ? 'active' : ''}" onclick="document.getElementById('main-product-img').src='${img}'; document.querySelectorAll('.thumb-item').forEach(t=>t.classList.remove('active')); this.classList.add('active');">
+                  <div class="thumbnail ${idx === 0 ? 'active' : ''}" onclick="document.getElementById('main-product-img').src='${img}'; document.querySelectorAll('.thumbnail').forEach(t=>t.classList.remove('active')); this.classList.add('active');">
                     <img src="${img}" alt="Thumbnail">
                   </div>
                 `).join('')}
               </div>
-              ` : `
-              <div class="thumbnail-list">
-                <div class="thumb-item active"><img src="${images[0]}" alt="Thumbnail"></div>
-              </div>
-              `}
-              <div class="main-image">
-                <img id="main-product-img" src="${images[0]}" alt="${p.name}">
-              </div>
+              ` : ''}
             </div>
             
-            <div class="product-info-section">
-              <div class="wishlist-icon-top">
-                <i class="ph ph-heart"></i>
+            <div class="product-info">
+              <h1>${p.name}</h1>
+              <div style="color: var(--text-muted); font-size: 1.1rem; margin-top:-0.5rem; margin-bottom: 1rem;">קטגוריה: ${p.category || 'כללי'}</div>
+              
+              <div class="price">
+                <span>₪${Number(p.price).toLocaleString()}</span>
+                ${hasDiscount ? `<span class="original-price">₪${Number(p.originalPrice).toLocaleString()}</span>` : ''}
               </div>
               
-              <div class="category-tag">${p.category || 'כללי'}</div>
-              <h1 class="product-main-title">${p.name}</h1>
+              ${p.stock === 0 ? '<div style="color:var(--primary-red);font-weight:700;font-size:1.1rem;margin:1rem 0">אזל המלאי</div>' : `<div style="color:#16a34a;font-weight:700;margin:1rem 0">✓ במלאי (${p.stock} יחידות)</div>`}
               
-              <div class="product-reviews">
-                <div class="stars">
-                  <i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i>
-                </div>
-                <span class="review-count">(24 ביקורות)</span>
-              </div>
-
-              <p class="product-short-desc">${p.description ? p.description.replace(/\\n/g, '<br>') : 'גוף תאורה מעוצב ואיכותי, מתאים למגוון חללים להשלמת המראה המודרני.'}</p>
-
-              <div class="product-price-row">
-                ${hasDiscount ? `<div class="discount-badge">-${Math.round((1 - p.price/p.originalPrice)*100)}%</div>` : ''}
-                <div class="current-price">₪${Number(p.price).toLocaleString()}</div>
-                ${hasDiscount ? `<div class="old-price">₪${Number(p.originalPrice).toLocaleString()}</div>` : ''}
-              </div>
-              <div class="tax-shipping-note">כולל מע"מ | משלוח חינם לכל הארץ</div>
-
-              <div class="divider"></div>
-
-              <div class="variant-group">
-                <label>צבע גוף תאורה</label>
-                <div class="variant-options colors">
-                  <button class="variant-btn" onclick="document.querySelectorAll('.variant-options.colors .variant-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active');"><span class="color-dot black"></span> שחור</button>
-                  <button class="variant-btn active" onclick="document.querySelectorAll('.variant-options.colors .variant-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active');"><span class="color-dot gold"></span> זהב</button>
-                  <button class="variant-btn" onclick="document.querySelectorAll('.variant-options.colors .variant-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active');"><span class="color-dot white"></span> לבן</button>
-                </div>
+              <p class="desc">${p.description ? p.description.replace(/\\n/g, '<br>') : 'אין תיאור למוצר זה.'}</p>
+              
+              <div style="display:flex; gap:1rem; margin-top:2rem;">
+                <button class="btn btn-primary" style="flex:1;font-size:1.2rem;padding:1rem" ${p.stock === 0 ? 'disabled' : ''} onclick="this.textContent='נוסף לסל ✓'; setTimeout(()=>this.textContent='הוסף לסל', 2000);">
+                  <i class="ph ph-shopping-cart" style="margin-left:0.5rem"></i> ${p.stock === 0 ? 'אזל המלאי' : 'הוסף לסל'}
+                </button>
+                <button class="btn btn-outline" style="width:60px;display:flex;align-items:center;justify-content:center;font-size:1.5rem">
+                  <i class="ph ph-heart"></i>
+                </button>
               </div>
               
-              <div class="variant-group">
-                <label>מידה</label>
-                <div class="variant-options sizes">
-                  <button class="variant-btn" onclick="document.querySelectorAll('.variant-options.sizes .variant-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active');">קוטר 40 ס"מ</button>
-                  <button class="variant-btn active" onclick="document.querySelectorAll('.variant-options.sizes .variant-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active');">קוטר 60 ס"מ</button>
-                  <button class="variant-btn" onclick="document.querySelectorAll('.variant-options.sizes .variant-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active');">קוטר 80 ס"מ</button>
+              <div style="margin-top: 3rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
+                <div style="display:flex; gap:1rem; align-items:center; color: var(--text-muted);">
+                  <i class="ph ph-truck" style="font-size: 1.5rem"></i>
+                  <span>משלוח מהיר עד הבית (3-5 ימי עסקים)</span>
                 </div>
-              </div>
-
-              ${p.stock === 0 ? '<div style="color:var(--primary-red);font-weight:700;font-size:1.1rem;margin:1rem 0">אזל המלאי</div>' : ''}
-
-              <div class="quantity-add-row">
-                 <div class="quantity-selector">
-                   <button class="qty-btn" onclick="let inp=this.nextElementSibling; if(inp.value>1)inp.value--">-</button>
-                   <input type="text" value="1" class="qty-input" readonly>
-                   <button class="qty-btn" onclick="let inp=this.previousElementSibling; inp.value++">+</button>
-                 </div>
-                 <button class="btn-add-main" ${p.stock === 0 ? 'disabled' : ''} onclick="this.innerHTML='<i class=\\'ph ph-check\\'></i> נוסף לסל'; setTimeout(()=>this.innerHTML='<i class=\\'ph ph-shopping-cart\\'></i> הוסף לסל', 2000);">
-                   <i class="ph ph-shopping-cart"></i> ${p.stock === 0 ? 'אזל המלאי' : 'הוסף לסל'}
-                 </button>
-              </div>
-              <button class="btn-buy-now" ${p.stock === 0 ? 'disabled' : ''}>קנה עכשיו</button>
-
-              <div class="trust-badges-box">
-                <div class="trust-badge">
-                  <i class="ph ph-truck"></i>
-                  <div class="trust-text">
-                    <strong>משלוח מהיר</strong>
-                    <span>לכל חלקי הארץ</span>
-                  </div>
+                <div style="display:flex; gap:1rem; align-items:center; color: var(--text-muted); margin-top: 1rem;">
+                  <i class="ph ph-shield-check" style="font-size: 1.5rem"></i>
+                  <span>אחריות לשנה על כל גופי התאורה</span>
                 </div>
-                <div class="trust-badge">
-                  <i class="ph ph-shield-check"></i>
-                  <div class="trust-text">
-                    <strong>אחריות מלאה</strong>
-                    <span>שקט נפשי</span>
-                  </div>
-                </div>
-                <div class="trust-badge">
-                  <i class="ph ph-diamond"></i>
-                  <div class="trust-text">
-                    <strong>איכות ללא פשרות</strong>
-                    <span>חומרים מובחרים</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="product-bottom-grid">
-            <div class="technical-details">
-              <h3>פרטים טכניים</h3>
-              <div class="tech-table">
-                <div class="tech-row"><span>מק"ט</span><strong>JL-${p.id}</strong></div>
-                <div class="tech-row"><span>סוג תאורה</span><strong>LED מובנה</strong></div>
-                <div class="tech-row"><span>הספק</span><strong>48W</strong></div>
-                <div class="tech-row"><span>גוון אור</span><strong>מתחלף לבחירה</strong></div>
-                <div class="tech-row"><span>מתח</span><strong>220-240V</strong></div>
-                <div class="tech-row"><span>חומר</span><strong>אלומיניום</strong></div>
-                <div class="tech-row"><span>אחריות</span><strong>שנה</strong></div>
-              </div>
-            </div>
-
-            <div class="product-bottom-section">
-              <div class="product-tabs-header">
-                <button class="tab-btn active" onclick="document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active'); document.getElementById('tab-desc').style.display='block'; document.getElementById('tab-ship').style.display='none';">תיאור המוצר</button>
-                <button class="tab-btn" onclick="document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active'); document.getElementById('tab-desc').style.display='none'; document.getElementById('tab-ship').style.display='block';">משלוחים והחזרות</button>
-              </div>
-              <div class="tab-content" id="tab-desc">
-                <p>${p.description ? p.description.replace(/\\n/g, '<br>') : 'גוף תאורה מעוצב ואיכותי להשלמת המראה המודרני בחלל החדר. עשוי חומרים עמידים עם פיזור אור אחיד ונעים.'}</p>
-                <p style="margin-top:1rem;">לקבלת הצעת מחיר לכמויות גדולות או לפרויקטים, ניתן ליצור קשר עם שירות הלקוחות שלנו.</p>
-              </div>
-              <div class="tab-content" id="tab-ship" style="display:none;">
-                <p><strong>משלוח עד הבית:</strong><br>חינם להזמנות מעל 500 ₪. זמן אספקה עד 5 ימי עסקים.</p>
-                <p style="margin-top:1rem;"><strong>איסוף עצמי:</strong><br>ניתן לאסוף מהסניף שלנו בנצרת בתאום מראש.</p>
-                <p style="margin-top:1rem;"><strong>החזרות:</strong><br>ניתן להחזיר מוצר באריזתו המקורית תוך 14 יום מקבלתו.</p>
               </div>
             </div>
           </div>
