@@ -18,12 +18,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const hasDiscount = p.originalPrice && p.originalPrice > p.price;
     const placeholderImg = 'https://images.unsplash.com/photo-1513506003901-1e6a229e9d15?q=80&w=400&auto=format&fit=crop';
+    
+    const allImages = (p.images && p.images.length > 0) ? p.images : [p.image || placeholderImg];
+    const firstImg = allImages[0];
+    const secondImg = allImages.length > 1 ? allImages[1] : null;
 
     card.innerHTML = `
       <div class="card-clickable-area" style="cursor:pointer;" onclick="window.location.href='product?id=${p.id}'">
         <div class="product-img">
-          <img src="${p.image || placeholderImg}" alt="${p.name}"
-            onerror="this.src='${placeholderImg}'">
+          <img src="${firstImg}" alt="${p.name}" class="primary-img" onerror="this.src='${placeholderImg}'">
+          ${secondImg ? `<img src="${secondImg}" alt="${p.name}" class="secondary-img" onerror="this.src='${placeholderImg}'">` : ''}
           ${p.stock === 0 ? '<div class="out-of-stock-badge">אזל המלאי</div>' : ''}
         </div>
         <h3 class="product-title">${p.name}</h3>
