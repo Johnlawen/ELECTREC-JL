@@ -59,8 +59,17 @@ const DEFAULT_PRODUCTS = [
   { id: 6, name: 'גוף קיר דגם קוביה', price: 247, originalPrice: 290, stock: 15, category: 'קיר', description: 'גוף קיר מינימליסטי לכל חלל', image: 'https://images.unsplash.com/photo-1565814329452-e1efa11c5e89?q=80&w=400&auto=format&fit=crop' },
 ];
 
+const DEFAULT_CATEGORIES = [
+  { id: 1, name: 'גופי תלייה', icon: 'ph-circles-three', description: 'מגוון עשיר של גופי תלייה מעוצבים', image: 'https://images.unsplash.com/photo-1513506003901-1e6a229e9d15?q=80&w=600&auto=format&fit=crop' },
+  { id: 2, name: 'גופי צמודי תקרה', icon: 'ph-circle', description: 'עיצוב מודרני, תאורה אחידה ומרשימה', image: 'https://images.unsplash.com/photo-1540932239986-30128078f3b5?q=80&w=600&auto=format&fit=crop' },
+  { id: 3, name: 'ספוטים ופסי תאורה', icon: 'ph-webcam', description: 'כוון את האור בדיוק למקום הנכון', image: 'https://images.unsplash.com/photo-1524061614234-8449637d56ce?q=80&w=600&auto=format&fit=crop' },
+  { id: 4, name: 'גופי קיר', icon: 'ph-square', description: 'תאורה מעוצבת לכל חלל', image: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?q=80&w=600&auto=format&fit=crop' },
+  { id: 5, name: 'פרופילים ותאורת לד', icon: 'ph-lines-x', description: 'פתרונות תאורה אינטגרליים', image: 'https://images.unsplash.com/photo-1600607686527-6fb886090705?q=80&w=600&auto=format&fit=crop' }
+];
+
 let localProducts = null;
 let localOrders = null;
+let localCategories = null;
 
 function getProducts() {
   return localProducts || DEFAULT_PRODUCTS;
@@ -103,6 +112,23 @@ function getNextProductId() {
   return products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
 }
 
+function getCategories() {
+  return localCategories || DEFAULT_CATEGORIES;
+}
+
+async function saveCategories(categories) {
+  localCategories = categories;
+  try {
+    await fetch('/api/store?key=jl_categories', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(categories)
+    });
+  } catch (err) {
+    console.error("Failed to save categories:", err);
+  }
+}
+
 // ─── INIT DATA FROM UPSTASH ──────────────────────────────────────────────────
 async function loadDataAndRender() {
   showToast('טוען נתונים מהשרת...');
@@ -123,15 +149,27 @@ async function loadDataAndRender() {
     } else {
       seedDemoOrders();
     }
+
+    const cRes = await fetch('/api/store?key=jl_categories');
+    const cData = await cRes.json();
+    if (cData && cData.data && cData.data.length > 0) {
+      localCategories = cData.data;
+    } else {
+      localCategories = DEFAULT_CATEGORIES;
+      saveCategories(localCategories); // seed
+    }
   } catch (e) {
     console.error("Failed to load data from Upstash", e);
     localProducts = DEFAULT_PRODUCTS;
     localOrders = [];
+    localCategories = DEFAULT_CATEGORIES;
   }
   
   renderDashboard();
   if (currentSection === 'products') renderProducts();
   if (currentSection === 'orders') renderOrders();
+  if (currentSection === 'categories') renderCategories();
+  if (currentSection === 'sales') renderSales();
 }
 
 function seedDemoOrders() {
@@ -158,13 +196,15 @@ function switchSection(section) {
   document.querySelectorAll('.nav-item').forEach(i => i.classList.toggle('active', i.dataset.section === section));
   document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
   document.getElementById(`section-${section}`).classList.add('active');
-  const titles = { dashboard: 'לוח בקרה', products: 'ניהול מוצרים', orders: 'ניהול הזמנות' };
+  const titles = { dashboard: 'לוח בקרה', products: 'ניהול מוצרים', orders: 'ניהול הזמנות', categories: 'ניהול קטגוריות', sales: 'ניהול מבצעים' };
   document.getElementById('page-title').textContent = titles[section];
   const btn = document.getElementById('topbar-action-btn');
   btn.style.display = section === 'products' ? 'flex' : 'none';
   if (section === 'dashboard') renderDashboard();
   if (section === 'products') renderProducts();
   if (section === 'orders') renderOrders();
+  if (section === 'categories') renderCategories();
+  if (section === 'sales') renderSales();
 }
 
 // ─── DASHBOARD ───────────────────────────────────────────────────────────────
@@ -246,7 +286,7 @@ function renderProducts(filter = '') {
         <button class="btn-icon" onclick="openEditProductModal(${p.id})">
           <i class="ph ph-pencil"></i> עריכה
         </button>
-        <button class="btn-icon danger" onclick="openDeleteModal(${p.id})">
+        <button class="btn-icon danger" onclick="openDeleteModal(${p.id}, 'product')">
           <i class="ph ph-trash"></i> מחיקה
         </button>
       </div>
@@ -320,21 +360,151 @@ function saveProduct() {
   saveProducts(products);
   closeProductModal();
   renderProducts();
+  if (currentSection === 'sales') renderSales();
   updateBadges();
 }
 
 // ─── DELETE MODAL ─────────────────────────────────────────────────────────────
 let deleteTargetId = null;
-function openDeleteModal(id) { deleteTargetId = id; document.getElementById('delete-modal').classList.add('open'); }
-function closeDeleteModal() { deleteTargetId = null; document.getElementById('delete-modal').classList.remove('open'); }
+let deleteTargetType = 'product';
+
+function openDeleteModal(id, type = 'product') { 
+  deleteTargetId = id; 
+  deleteTargetType = type;
+  document.getElementById('delete-modal').classList.add('open'); 
+}
+
+function closeDeleteModal() { 
+  deleteTargetId = null; 
+  document.getElementById('delete-modal').classList.remove('open'); 
+}
+
 function confirmDelete() {
   if (!deleteTargetId) return;
-  const products = getProducts().filter(p => p.id !== deleteTargetId);
-  saveProducts(products);
+  
+  if (deleteTargetType === 'product') {
+    const products = getProducts().filter(p => p.id !== deleteTargetId);
+    saveProducts(products);
+    renderProducts();
+    if (currentSection === 'sales') renderSales();
+    updateBadges();
+    showToast('המוצר נמחק');
+  } else if (deleteTargetType === 'category') {
+    const cats = getCategories().filter(c => c.id !== deleteTargetId);
+    saveCategories(cats);
+    renderCategories();
+    showToast('הקטגוריה נמחקה');
+  }
   closeDeleteModal();
-  renderProducts();
-  updateBadges();
-  showToast('המוצר נמחק');
+}
+
+// ─── CATEGORIES ──────────────────────────────────────────────────────────────
+function renderCategories() {
+  const cats = getCategories();
+  const grid = document.getElementById('categories-admin-grid');
+  if (cats.length === 0) {
+    grid.innerHTML = '<p class="empty-msg" style="grid-column:1/-1;text-align:center;padding:3rem 0">לא נמצאו קטגוריות</p>';
+    return;
+  }
+  grid.innerHTML = cats.map(c => `
+    <div class="product-admin-card">
+      <div class="product-admin-img" style="height:120px">
+        <img src="${c.image || 'https://via.placeholder.com/260x180?text=No+Image'}" onerror="this.src='https://via.placeholder.com/260x180?text=No+Image'">
+      </div>
+      <div class="product-admin-body">
+        <div class="product-admin-name" style="display:flex;align-items:center;gap:0.5rem">
+          <i class="ph ${c.icon}" style="font-size:1.2rem;color:var(--primary-red)"></i> ${c.name}
+        </div>
+        <div class="product-admin-meta" style="font-size:0.8rem;color:var(--text-muted)">${c.description}</div>
+      </div>
+      <div class="product-admin-actions">
+        <button class="btn-icon" onclick="openEditCategoryModal(${c.id})"><i class="ph ph-pencil"></i> עריכה</button>
+        <button class="btn-icon danger" onclick="openDeleteModal(${c.id}, 'category')"><i class="ph ph-trash"></i> מחיקה</button>
+      </div>
+    </div>`).join('');
+}
+
+function openAddCategoryModal() {
+  document.getElementById('cat-modal-title').textContent = 'הוסף קטגוריה חדשה';
+  document.getElementById('edit-category-id').value = '';
+  ['c-name','c-icon','c-description','c-image'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('cat-img-preview').style.display = 'none';
+  document.getElementById('category-modal').classList.add('open');
+}
+
+function openEditCategoryModal(id) {
+  const cat = getCategories().find(c => c.id === id);
+  if (!cat) return;
+  document.getElementById('cat-modal-title').textContent = 'עריכת קטגוריה';
+  document.getElementById('edit-category-id').value = id;
+  document.getElementById('c-name').value = cat.name;
+  document.getElementById('c-icon').value = cat.icon || '';
+  document.getElementById('c-description').value = cat.description || '';
+  document.getElementById('c-image').value = cat.image || '';
+  const preview = document.getElementById('cat-img-preview');
+  if (cat.image) { preview.src = cat.image; preview.style.display = 'block'; }
+  else { preview.style.display = 'none'; }
+  document.getElementById('category-modal').classList.add('open');
+}
+
+function closeCategoryModal() {
+  document.getElementById('category-modal').classList.remove('open');
+}
+
+function saveCategory() {
+  const name = document.getElementById('c-name').value.trim();
+  if (!name) { showToast('שם קטגוריה חובה'); return; }
+  const cats = getCategories();
+  const editId = document.getElementById('edit-category-id').value;
+  const catData = {
+    name,
+    icon: document.getElementById('c-icon').value.trim() || 'ph-folder',
+    description: document.getElementById('c-description').value.trim(),
+    image: document.getElementById('c-image').value.trim(),
+  };
+  if (editId) {
+    const idx = cats.findIndex(c => c.id === parseInt(editId));
+    if (idx !== -1) cats[idx] = { ...cats[idx], ...catData };
+    showToast('הקטגוריה עודכנה ✓');
+  } else {
+    const newId = cats.length > 0 ? Math.max(...cats.map(c => c.id)) + 1 : 1;
+    cats.push({ id: newId, ...catData });
+    showToast('קטגוריה חדשה נוספה ✓');
+  }
+  saveCategories(cats);
+  closeCategoryModal();
+  renderCategories();
+}
+
+// ─── SALES ──────────────────────────────────────────────────────────────
+function renderSales() {
+  // Sales are products with originalPrice > price
+  const sales = getProducts().filter(p => p.originalPrice > p.price);
+  const grid = document.getElementById('sales-admin-grid');
+  if (sales.length === 0) {
+    grid.innerHTML = '<p class="empty-msg" style="grid-column:1/-1;text-align:center;padding:3rem 0">אין מוצרים במבצע כרגע.<br>כדי להוסיף מוצר למבצע, ערוך את המוצר בניהול המוצרים והוסף "מחיר לפני הנחה".</p>';
+    return;
+  }
+  grid.innerHTML = sales.map(p => {
+    const discount = Math.round((1 - (p.price / p.originalPrice)) * 100);
+    return \`
+    <div class="product-admin-card">
+      <div class="product-admin-img">
+        <div style="position:absolute;top:10px;right:10px;background:var(--primary-red);color:white;padding:2px 8px;border-radius:12px;font-weight:bold;font-size:0.8rem;z-index:2">\${discount}%-</div>
+        <img src="\${p.image || 'https://via.placeholder.com/260x180?text=No+Image'}" onerror="this.src='https://via.placeholder.com/260x180?text=No+Image'">
+      </div>
+      <div class="product-admin-body">
+        <div class="product-admin-name">\${p.name}</div>
+        <div class="product-admin-meta">
+          <span class="product-price">₪\${p.price.toLocaleString()}</span>
+          <span style="text-decoration:line-through;color:#94a3b8">₪\${p.originalPrice.toLocaleString()}</span>
+        </div>
+      </div>
+      <div class="product-admin-actions">
+        <button class="btn-icon" onclick="openEditProductModal(\${p.id})"><i class="ph ph-pencil"></i> שנה מחיר/מבצע</button>
+      </div>
+    </div>\`
+  }).join('');
 }
 
 // ─── ORDERS ──────────────────────────────────────────────────────────────────

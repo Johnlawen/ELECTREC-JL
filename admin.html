@@ -56,6 +56,12 @@
         <i class="ph ph-package"></i><span>מוצרים</span>
         <span class="badge" id="products-count">0</span>
       </a>
+      <a href="#" class="nav-item" data-section="categories">
+        <i class="ph ph-folder"></i><span>קטגוריות</span>
+      </a>
+      <a href="#" class="nav-item" data-section="sales">
+        <i class="ph ph-tag"></i><span>מבצעים</span>
+      </a>
       <a href="#" class="nav-item" data-section="orders">
         <i class="ph ph-shopping-bag"></i><span>הזמנות</span>
         <span class="badge badge-red" id="orders-count">0</span>
@@ -149,6 +155,28 @@
       </div>
     </section>
 
+    <!-- CATEGORIES SECTION -->
+    <section class="admin-section" id="section-categories">
+      <div class="section-toolbar" style="justify-content: flex-end;">
+         <button class="btn-admin-primary" onclick="openAddCategoryModal()">
+          <i class="ph ph-plus"></i> הוסף קטגוריה
+        </button>
+      </div>
+      <div class="products-admin-grid" id="categories-admin-grid">
+        <!-- Cards rendered by JS -->
+      </div>
+    </section>
+
+    <!-- SALES SECTION -->
+    <section class="admin-section" id="section-sales">
+      <div class="section-toolbar">
+         <p style="color: var(--text-muted); font-size: 0.95rem;">מוצרים המוצגים כאן הם מוצרים שיש להם מחיר מקורי גבוה מהמחיר הנוכחי (הנחה).</p>
+      </div>
+      <div class="products-admin-grid" id="sales-admin-grid">
+        <!-- Cards rendered by JS -->
+      </div>
+    </section>
+
   </main>
 
   <!-- ADD/EDIT PRODUCT MODAL -->
@@ -210,6 +238,42 @@
     </div>
   </div>
 
+  <!-- ADD/EDIT CATEGORY MODAL -->
+  <div class="modal-overlay" id="category-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="cat-modal-title">הוסף קטגוריה חדשה</h2>
+        <button class="modal-close" onclick="closeCategoryModal()"><i class="ph ph-x"></i></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="edit-category-id">
+        <div class="form-group">
+          <label>שם הקטגוריה *</label>
+          <input type="text" id="c-name" placeholder="שם הקטגוריה">
+        </div>
+        <div class="form-group">
+          <label>אייקון (Phosphor Icons - למשל ph-circle)</label>
+          <input type="text" id="c-icon" placeholder="ph-circle">
+        </div>
+        <div class="form-group">
+          <label>תיאור</label>
+          <textarea id="c-description" rows="2" placeholder="תיאור קצר..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>כתובת תמונה (URL)</label>
+          <input type="text" id="c-image" placeholder="https://...">
+          <div class="img-preview-wrap">
+            <img id="cat-img-preview" src="" alt="" style="display:none">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-admin-secondary" onclick="closeCategoryModal()">ביטול</button>
+        <button class="btn-admin-primary" onclick="saveCategory()">שמור קטגוריה</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ORDER DETAIL MODAL -->
   <div class="modal-overlay" id="order-modal">
     <div class="modal">
@@ -226,15 +290,15 @@
   <div class="modal-overlay" id="delete-modal">
     <div class="modal modal-sm">
       <div class="modal-header">
-        <h2>מחיקת מוצר</h2>
+        <h2>אישור מחיקה</h2>
         <button class="modal-close" onclick="closeDeleteModal()"><i class="ph ph-x"></i></button>
       </div>
       <div class="modal-body">
-        <p style="text-align:center;font-size:1.1rem;">האם אתה בטוח שברצונך למחוק את המוצר?<br>פעולה זו אינה ניתנת לביטול.</p>
+        <p style="text-align:center;font-size:1.1rem;">האם אתה בטוח שברצונך למחוק פריט זה?<br>פעולה זו אינה ניתנת לביטול.</p>
       </div>
       <div class="modal-footer">
         <button class="btn-admin-secondary" onclick="closeDeleteModal()">ביטול</button>
-        <button class="btn-danger" onclick="confirmDelete()">מחק מוצר</button>
+        <button class="btn-danger" onclick="confirmDelete()">מחק</button>
       </div>
     </div>
   </div>
