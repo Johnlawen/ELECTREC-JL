@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>חשמל ג'יי.אל לאון בע"מ | JL</title>
+  <title>מבצעים | חשמל ג'יי.אל לאון בע"מ | JL</title>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,14 +19,16 @@
   <link rel="stylesheet" href="i18n.css">
 </head>
 
-<body>
+<body class="bg-light">
 
   <!-- Header -->
   <header class="header">
     <div class="header-top container">
       <div class="logo">
-        <img src="image/Electric jl.png" alt="JL Logo" class="logo-img">
-        <span class="logo-text">חשמל ג'יי.אל לאון בע"מ</span>
+        <a href="index.html" style="display: flex; align-items: center; gap: 0.75rem;">
+          <img src="image/Electric jl.png" alt="JL Logo" class="logo-img">
+          <span class="logo-text">חשמל ג'יי.אל לאון בע"מ</span>
+        </a>
       </div>
 
       <div class="search-bar">
@@ -48,23 +50,68 @@
       <ul>
         <li><a href="index.html" data-i18n="navHome">דף הבית</a></li>
         <li><a href="categories.html" data-i18n="navCategories">קטגוריות</a></li>
-        <li><a href="sales.html" data-i18n="navSales">מבצעים</a></li>
+        <li><a href="sales.html" class="active" data-i18n="navSales">מבצעים</a></li>
         <li><a href="contact.html" data-i18n="navContact">צור קשר</a></li>
         <li><a href="about.html" data-i18n="navAbout">אודותינו</a></li>
       </ul>
     </nav>
   </header>
 
-  <!-- Product Detail Section -->
-  <main class="product-page section container" id="product-detail-container" style="min-height: 60vh;">
-    <div class="text-center" style="padding: 4rem 0;">
-      <i class="ph ph-spinner-gap" style="font-size: 3rem; animation: spin 1s linear infinite;"></i>
-      <p style="margin-top: 1rem; color: var(--text-muted);">טוען נתוני מוצר...</p>
+  <!-- Category Hero Background -->
+  <div class="sales-hero" style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1513506003901-1e6a229e9d15?q=80&w=1600&auto=format&fit=crop') no-repeat center/cover;">
+    <div class="container sales-hero-content">
+      <h1 class="page-title" id="category-page-title">טוען...</h1>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="sales-grid" id="category-products-grid" style="margin-top: 3rem;">
+      <div class="product-card skeleton-card"><div class="product-img skeleton-img"></div><div class="skeleton-text"></div><div class="skeleton-price"></div></div>
+      <div class="product-card skeleton-card"><div class="product-img skeleton-img"></div><div class="skeleton-text"></div><div class="skeleton-price"></div></div>
+      <div class="product-card skeleton-card"><div class="product-img skeleton-img"></div><div class="skeleton-text"></div><div class="skeleton-price"></div></div>
+      <div class="product-card skeleton-card"><div class="product-img skeleton-img"></div><div class="skeleton-text"></div><div class="skeleton-price"></div></div>
+    </div>
+
+    <!-- Weekend Promo Banner -->
+    <div class="promo-weekend">
+      <div class="promo-text">
+        <h3>מבצעי סוף שבוע</h3>
+        <h2>עד <span class="text-red">40%</span> הנחה</h2>
+        <p>על מגוון גופי תאורה ומוצרים נבחרים</p>
+        <button class="btn btn-white" style="font-weight: 700; padding: 0.75rem 2rem;">לכל המבצעים</button>
+      </div>
+
+      <div class="promo-divider"></div>
+
+      <div class="promo-features">
+        <div class="promo-feature">
+          <i class="ph ph-tag"></i>
+          <div class="promo-feature-text">
+            <strong>מחירים מיוחדים</strong>
+            <span>למקום מוגבל</span>
+          </div>
+        </div>
+        <div class="promo-feature">
+          <i class="ph ph-shield-check"></i>
+          <div class="promo-feature-text">
+            <strong>אחריות מלאה</strong>
+            <span>על כל המוצרים</span>
+          </div>
+        </div>
+        <div class="promo-feature">
+          <i class="ph ph-truck"></i>
+          <div class="promo-feature-text">
+            <strong>משלוח מהיר</strong>
+            <span>לכל חלקי הארץ</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="promo-image">
+        <img src="image/1.png" alt="Living Room Luxury">
+      </div>
     </div>
   </main>
-  <style>
-    @keyframes spin { 100% { transform: rotate(360deg); } }
-  </style>
 
   <!-- Footer -->
   <footer class="footer">
@@ -77,8 +124,7 @@
         <p data-i18n="footerImport">יבוא ושיווק גופי תאורה מעוצבים לבתים, משרדים ופרויקטים</p>
         <div class="social-links">
           <a href="#"><i class="ph ph-facebook-logo"></i></a>
-          <a href="https://www.instagram.com/electric.joullawen/" target="_blank"><i
-              class="ph ph-instagram-logo"></i></a>
+          <a href="https://www.instagram.com/electric.joullawen/" target="_blank"><i class="ph ph-instagram-logo"></i></a>
           <a href="#"><i class="ph ph-whatsapp-logo"></i></a>
           <a href="#"><i class="ph ph-youtube-logo"></i></a>
         </div>

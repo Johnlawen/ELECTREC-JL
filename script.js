@@ -425,6 +425,44 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   }
 
+  // ─── LOAD & RENDER CATEGORY PRODUCTS PAGE (category-products.html) ───────────
+  const catProductsGrid = document.getElementById('category-products-grid');
+  if (catProductsGrid && window.location.pathname.includes('category-products')) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoryName = urlParams.get('category');
+    
+    if (categoryName) {
+      document.getElementById('category-page-title').textContent = categoryName;
+    } else {
+      document.getElementById('category-page-title').textContent = 'כל המוצרים';
+    }
+
+    fetch('https://electrec-jl.vercel.app/api/store?key=jl_products')
+      .then(res => res.json())
+      .then(data => {
+        const products = data.data || [];
+        catProductsGrid.innerHTML = '';
+        
+        let filtered = products;
+        if (categoryName) {
+          filtered = products.filter(p => p.category === categoryName);
+        }
+        
+        if (filtered.length === 0) {
+          catProductsGrid.innerHTML = '<p style="text-align:center;grid-column:1/-1;color:#666;font-size:1.2rem;">אין מוצרים בקטגוריה זו כרגע</p>';
+          return;
+        }
+
+        filtered.forEach(p => {
+          catProductsGrid.appendChild(renderProductCard(p));
+        });
+      })
+      .catch(err => {
+        console.error('Failed to load category products:', err);
+        catProductsGrid.innerHTML = '<p style="text-align:center;grid-column:1/-1;color:#666">שגיאה בטעינת מוצרים</p>';
+      });
+  }
+
   // ─── LOAD & RENDER CATEGORIES PAGE (categories.html) ──────────────────────
   const catGrid = document.querySelector('.category-cards-grid');
   if (catGrid && window.location.pathname.includes('categories')) {
@@ -435,7 +473,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!cats || cats.length === 0) return; // leave hardcoded if empty
         
         catGrid.innerHTML = cats.map(c => `
-          <a href="#" class="cat-card">
+          <a href="category-products.html?category=${encodeURIComponent(c.name)}" class="cat-card">
             <div class="cat-card-img">
               <img src="${c.image || 'https://via.placeholder.com/600x400?text=No+Image'}" alt="${c.name}">
             </div>
