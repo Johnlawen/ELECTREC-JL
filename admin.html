@@ -176,8 +176,11 @@
 
     <!-- SALES SECTION -->
     <section class="admin-section" id="section-sales">
-      <div class="section-toolbar">
-         <p style="color: var(--text-muted); font-size: 0.95rem;">מוצרים המוצגים כאן הם מוצרים שיש להם מחיר מקורי גבוה מהמחיר הנוכחי (הנחה).</p>
+      <div class="section-toolbar" style="justify-content: space-between; align-items: center;">
+         <p style="color: var(--text-muted); font-size: 0.95rem; margin: 0;">מוצרים המוצגים כאן הם מוצרים שיש להם מחיר מקורי גבוה מהמחיר הנוכחי (הנחה).</p>
+         <button class="btn-admin-primary" onclick="openAddProductModal()">
+          <i class="ph ph-plus"></i> הוסף מוצר
+        </button>
       </div>
       <div class="products-admin-grid" id="sales-admin-grid">
         <!-- Cards rendered by JS -->
